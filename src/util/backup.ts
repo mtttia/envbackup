@@ -1,33 +1,38 @@
-import { readdirSync, statSync, copyFileSync } from 'fs'
+import { readdirSync, statSync, copyFileSync, mkdirSync, existsSync } from 'fs'
 /*
 summary
 input: path to copy, final path
 copy all file from "path to copy in final path"
 */
 
-export async function envBackup(pathToCopy: string, finalPath: string): Promise<void>
+export function envBackup(pathToCopy: string, finalPath: string) :void
 {
-  const list: string[] = []
-  listFolder(list, "", pathToCopy)
-  list.forEach(file => {
+  const fileList: string[] = []
+  const folderList: string[] = []
+  listFolder(folderList, fileList, "", pathToCopy)
+  folderList.forEach(folder => {
+      //if folder not exists make the folder
+      const workPath = finalPath + folder
+      if(!existsSync(workPath))
+          mkdirSync(workPath)
+  })
+  fileList.forEach(file => {
     copyFileSync(pathToCopy + file, finalPath + file)
   })
+
 }
 
 /*
 summary
 example of how it work
-
 root = C:/root/
 relativePath = folder/
-
 so file path will be = root + relativePath = C:/root/folder/
 and file path will be = root + relativePath + fileName = C:/root/folder/ + file1.txt
-
 so I will save in my list = relativePath + fileName = folder/file1.txt
 */
 
-async function listFolder(list:string[], relativePath: string, root:string): Promise<void>
+function listFolder(listOfFolder:string[], listFile:string[], relativePath: string, root:string): void
 {
   const rootStat = statSync(root + relativePath)
   if (rootStat.isDirectory())
@@ -36,15 +41,16 @@ async function listFolder(list:string[], relativePath: string, root:string): Pro
     for (const file of dirFiles)
     {
       const filePath = relativePath + file
-      const fileStat = statSync(root + file)
+      const fileStat = statSync(root + filePath)
       if (fileStat.isDirectory())
       {
-        listFolder(list, relativePath + filePath + "/", root)
+          listOfFolder.push(filePath)
+          listFolder(listOfFolder, listFile, relativePath + filePath + "/", root)
       }
       else if (fileStat.isFile())
       {
         //put file in list
-        list.push(filePath)
+        listFile.push(filePath)
       }
       else
       {

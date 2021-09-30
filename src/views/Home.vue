@@ -1,16 +1,21 @@
 <template>
-  <hello-world />
+  <div>
+    <EnvBackupHome />
+    <StartBackup />
+  </div>  
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
-  import HelloWorld from '../components/HelloWorld.vue'
+  import StartBackup from '../components/StartBackup.vue'
+  import EnvBackupHome from '../components/EnvBackupHome.vue'
 
   export default Vue.extend({
     name: 'Home',
 
     components: {
-      HelloWorld,
+      StartBackup,
+      EnvBackupHome
     },
   })
 </script>
