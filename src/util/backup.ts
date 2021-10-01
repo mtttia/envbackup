@@ -1,4 +1,6 @@
 import { readdirSync, statSync, copyFileSync, mkdirSync, existsSync } from 'fs'
+
+
 /*
 summary
 input: path to copy, final path
@@ -7,6 +9,10 @@ copy all file from "path to copy in final path"
 
 export function envBackup(pathToCopy: string, finalPath: string) :void
 {
+  pathToCopy = pathToCopy[pathToCopy.length - 1] == '/' ? pathToCopy : pathToCopy + "/"
+  finalPath = finalPath[finalPath.length - 1] == '/' ? finalPath : finalPath + "/"
+  
+  console.log('oooo', typeof readdirSync, typeof statSync, typeof copyFileSync, typeof mkdirSync, typeof existsSync);
   const fileList: string[] = []
   const folderList: string[] = []
   listFolder(folderList, fileList, "", pathToCopy)
@@ -61,4 +67,9 @@ function listFolder(listOfFolder:string[], listFile:string[], relativePath: stri
   else {
     throw new Error(root + relativePath + "-> is not a folder")
   }
+}
+
+export function pathCorrector(path: string): string{
+  path = path.split('\\').join('/')
+  return path  
 }
