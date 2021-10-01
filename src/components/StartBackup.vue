@@ -5,6 +5,7 @@
         class="central-card"
         elevation="3"
         max-width="700"
+        :loading="cardLoading"
     >
         
         <v-row>
@@ -76,16 +77,24 @@
 
     data: () => ({
         srcFolder:"",
-        distFolder:""
+        distFolder:"",
+        cardLoading:false
     }),
 
     methods:{
-        startBackup()
+        async startBackup()
         {
+            this.cardLoading = true
+            this.backup()
+            this.cardLoading = false
+        },
+        backup(){
             try{
                 envBackup(this.srcFolder, this.distFolder)
             }catch(e)
             {
+                console.log(e);
+                
                 alert('errore durante il backup')
             }
         },

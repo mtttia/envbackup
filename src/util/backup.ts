@@ -11,8 +11,6 @@ export function envBackup(pathToCopy: string, finalPath: string) :void
 {
   pathToCopy = pathToCopy[pathToCopy.length - 1] == '/' ? pathToCopy : pathToCopy + "/"
   finalPath = finalPath[finalPath.length - 1] == '/' ? finalPath : finalPath + "/"
-  
-  console.log('oooo', typeof readdirSync, typeof statSync, typeof copyFileSync, typeof mkdirSync, typeof existsSync);
   const fileList: string[] = []
   const folderList: string[] = []
   listFolder(folderList, fileList, "", pathToCopy)
@@ -46,12 +44,13 @@ function listFolder(listOfFolder:string[], listFile:string[], relativePath: stri
     const dirFiles = readdirSync(root + relativePath, { encoding: 'utf8' })
     for (const file of dirFiles)
     {
+      
       const filePath = relativePath + file
       const fileStat = statSync(root + filePath)
       if (fileStat.isDirectory())
       {
           listOfFolder.push(filePath)
-          listFolder(listOfFolder, listFile, relativePath + filePath + "/", root)
+          listFolder(listOfFolder, listFile, filePath + "/", root)
       }
       else if (fileStat.isFile())
       {
